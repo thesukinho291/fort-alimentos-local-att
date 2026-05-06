@@ -1,0 +1,1 @@
+ALTER TABLE public.site_content ADD COLUMN banner_image_url text NOT NULL DEFAULT '';

@@ -1,0 +1,1 @@
+CREATE POLICY "Anyone can delete events" ON public.analytics_events FOR DELETE TO public USING (true);

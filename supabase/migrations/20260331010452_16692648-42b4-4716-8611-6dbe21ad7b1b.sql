@@ -1,0 +1,2 @@
+ALTER TABLE public.site_content ADD COLUMN IF NOT EXISTS business_hours text NOT NULL DEFAULT 'Seg–Sex: 08:00 – 18:00';
+ALTER TABLE public.site_content ADD COLUMN IF NOT EXISTS promo_banner_text text NOT NULL DEFAULT '';

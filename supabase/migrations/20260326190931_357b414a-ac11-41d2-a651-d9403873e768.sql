@@ -1,0 +1,1 @@
+ALTER TABLE public.site_content ADD COLUMN email text NOT NULL DEFAULT 'contato@fortalimentos.com.br';

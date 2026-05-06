@@ -1,0 +1,3 @@
+ALTER TABLE public.site_content 
+ADD COLUMN categories jsonb NOT NULL DEFAULT '["Frios", "Laticínios", "Bebidas", "Condimentos", "Congelados"]'::jsonb,
+ADD COLUMN features jsonb NOT NULL DEFAULT '[{"icon": "ShieldCheck", "title": "Qualidade Garantida", "desc": "Produtos selecionados com rigoroso controle de qualidade."}, {"icon": "Truck", "title": "Entrega Rápida", "desc": "Logística eficiente para atender seu negócio com pontualidade."}, {"icon": "Users", "title": "Atendimento Dedicado", "desc": "Equipe especializada para atender todas as suas necessidades."}]'::jsonb;
