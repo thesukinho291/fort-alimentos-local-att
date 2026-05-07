@@ -38,13 +38,13 @@ const Admin = () => {
     setSubmitting(false);
 
     if (loginError) {
-      toast.error("Nao foi possivel entrar. Verifique o e-mail e a senha.");
+      toast.error("Não foi possível entrar. Verifique o e-mail e a senha.");
     }
   };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    toast.info("Sessao encerrada.");
+    toast.info("Sessão encerrada.");
   };
 
   if (authLoading) {

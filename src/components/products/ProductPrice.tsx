@@ -25,7 +25,7 @@ const ProductPrice = ({ product, size = "md", showLabel = false }: ProductPriceP
     <div className={showLabel ? "bg-muted/50 rounded-xl p-5 border border-border" : "mt-3 flex items-center gap-2"}>
       {showLabel && (
         <span className="text-xs font-heading font-semibold uppercase tracking-wider text-muted-foreground block mb-2">
-          Preco
+          Preço
         </span>
       )}
       <div className="flex flex-wrap items-baseline gap-2">

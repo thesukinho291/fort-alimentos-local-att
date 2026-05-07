@@ -14,6 +14,12 @@ interface Props {
 
 type SortMode = "featured" | "name" | "category";
 
+const categoryLabel = (category: string) => {
+  if (category === "Promocoes") return "Promoções";
+  if (category === "Lancamentos") return "Lançamentos";
+  return category;
+};
+
 const normalizeText = (value: string) =>
   value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -99,7 +105,7 @@ const ProductsSection = ({ products, categories, isLoading }: Props) => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="search"
-                placeholder="Pesquisar por nome ou descricao..."
+                placeholder="Pesquisar por nome ou descrição..."
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 rounded-full border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -144,7 +150,7 @@ const ProductsSection = ({ products, categories, isLoading }: Props) => {
                     : "bg-card text-muted-foreground hover:bg-muted border border-border"
                 }`}
               >
-                {cat}
+                {categoryLabel(cat)}
               </button>
             ))}
           </div>

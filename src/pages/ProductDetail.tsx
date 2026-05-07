@@ -90,8 +90,8 @@ const ProductDetail = () => {
           <ShoppingCart className="text-muted-foreground" size={32} />
         </div>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Produto nao encontrado</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Ele pode ter sido removido ou estar temporariamente indisponivel.</p>
+          <h1 className="font-heading text-2xl font-bold text-foreground">Produto não encontrado</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Ele pode ter sido removido ou estar temporariamente indisponível.</p>
         </div>
         <Link
           to="/#produtos"
@@ -104,7 +104,7 @@ const ProductDetail = () => {
   }
 
   const whatsappHref = siteContent?.whatsapp_link
-    ? `${siteContent.whatsapp_link}${siteContent.whatsapp_link.includes("?") ? "&" : "?"}text=${encodeURIComponent(`Ola! Tenho interesse no produto: ${product.name}`)}`
+    ? `${siteContent.whatsapp_link}${siteContent.whatsapp_link.includes("?") ? "&" : "?"}text=${encodeURIComponent(`Olá! Tenho interesse no produto: ${product.name}`)}`
     : "";
   const canAddToCart = !product.is_unavailable;
 
@@ -166,7 +166,7 @@ const ProductDetail = () => {
                 <div className="w-16 h-1 bg-gradient-fort rounded-full mb-5" />
 
                 <p className="text-muted-foreground leading-relaxed text-base mb-8">
-                  {product.description || "Produto de alta qualidade selecionado especialmente para o seu negocio."}
+                  {product.description || "Produto de alta qualidade selecionado especialmente para o seu negócio."}
                 </p>
 
                 <ProductPrice product={product} size="lg" showLabel />
@@ -223,7 +223,7 @@ const ProductDetail = () => {
 
                 {product.is_unavailable && (
                   <div className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-full font-heading font-bold text-destructive bg-destructive/10 border border-destructive/30">
-                    Produto indisponivel no momento
+                    Produto indisponível no momento
                   </div>
                 )}
               </motion.div>

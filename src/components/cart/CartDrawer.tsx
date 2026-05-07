@@ -32,9 +32,9 @@ const CartDrawer = () => {
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted">
               <span className="font-heading text-2xl font-bold text-muted-foreground">0</span>
             </div>
-            <p className="font-heading text-lg font-bold text-foreground">Seu carrinho esta vazio</p>
+            <p className="font-heading text-lg font-bold text-foreground">Seu carrinho está vazio</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Abra um produto e escolha a quantidade para adiciona-lo ao pedido.
+              Abra um produto e escolha a quantidade para adicioná-lo ao pedido.
             </p>
           </div>
         ) : (

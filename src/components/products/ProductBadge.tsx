@@ -12,7 +12,7 @@ const ProductBadge = ({ product, compact = false }: ProductBadgeProps) => {
   if (product.is_unavailable) {
     return (
       <Badge className={`bg-destructive text-destructive-foreground font-heading font-bold shadow-card border-0 ${sizeClass}`}>
-        Indisponivel
+        Indisponível
       </Badge>
     );
   }
@@ -20,7 +20,7 @@ const ProductBadge = ({ product, compact = false }: ProductBadgeProps) => {
   if (product.is_new_release) {
     return (
       <Badge className={`bg-green-600 hover:bg-green-600 text-white font-heading font-bold shadow-card border-0 ${sizeClass}`}>
-        Lancamento
+        Lançamento
       </Badge>
     );
   }
@@ -28,7 +28,7 @@ const ProductBadge = ({ product, compact = false }: ProductBadgeProps) => {
   if (product.is_promotion) {
     return (
       <Badge className={`bg-gradient-yellow text-accent-foreground font-heading font-bold shadow-card border-0 ${sizeClass}`}>
-        PROMOCAO
+        PROMOÇÃO
       </Badge>
     );
   }
