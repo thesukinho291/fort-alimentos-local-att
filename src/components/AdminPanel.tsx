@@ -15,7 +15,7 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import {
   X, Plus, Pencil, Trash2, Save, LogOut, Loader2,
   LayoutDashboard, Package, FileText, BarChart3, Search,
-  ChevronDown, ChevronUp, Copy, Eye, EyeOff, ArrowUpDown,
+  ChevronDown, ChevronUp, Copy,
   Image as ImageIcon, Settings,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -41,7 +41,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
   useEffect(() => { setContent(siteContent); }, [siteContent]);
 
   const handleLogin = () => {
-      toast.error("Usuário ou senha incorretos.");
+    toast.error("Usuário ou senha incorretos.");
   };
 
   const handleSaveContent = async () => {
@@ -102,7 +102,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-fort-dark/70 backdrop-blur-md flex items-center justify-center p-2 md:p-4"
+        className="fixed inset-0 z-[100] flex items-stretch justify-center bg-fort-dark/70 p-0 backdrop-blur-md sm:items-center sm:p-3 md:p-4"
         onClick={(event) => event.stopPropagation()}
       >
         <motion.div
@@ -111,19 +111,19 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-card rounded-2xl shadow-float w-full max-w-5xl max-h-[95vh] overflow-hidden flex flex-col"
+          className="flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden bg-card shadow-float sm:h-auto sm:max-h-[95vh] sm:rounded-2xl"
         >
           {/* Header */}
-          <div className="bg-gradient-fort px-6 py-4 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-primary-foreground/20 rounded-xl flex items-center justify-center">
+          <div className="flex shrink-0 items-center justify-between bg-gradient-fort px-4 py-3 sm:px-6 sm:py-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-foreground/20">
                 {loggedIn ? <LayoutDashboard size={18} className="text-primary-foreground" /> : <Settings size={18} className="text-primary-foreground" />}
               </div>
-              <div>
-                <h2 className="font-heading font-bold text-lg text-primary-foreground">
+              <div className="min-w-0">
+                <h2 className="truncate font-heading text-base font-bold text-primary-foreground sm:text-lg">
                   {loggedIn ? "Painel Administrativo" : "Login Admin"}
                 </h2>
-                {loggedIn && <p className="text-primary-foreground/60 text-xs">Gerencie seu site completo</p>}
+                {loggedIn && <p className="truncate text-xs text-primary-foreground/60">Gerencie seu site completo</p>}
               </div>
             </div>
             <button
@@ -135,7 +135,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6">
             {!loggedIn ? (
               <div className="max-w-sm mx-auto space-y-4 py-8">
                 <div className="text-center mb-6">
@@ -169,26 +169,26 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
             ) : (
               <>
                 {/* Tabs */}
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="flex gap-1 bg-muted/40 rounded-xl p-1 border border-border/30 flex-1">
+                <div className="sticky -top-3 z-20 mb-4 flex items-center gap-2 bg-card/95 pb-3 pt-1 backdrop-blur sm:static sm:mb-6 sm:bg-transparent sm:p-0">
+                  <div className="grid min-w-0 flex-1 grid-cols-3 gap-1 rounded-xl border border-border/30 bg-muted/40 p-1">
                     {tabs.map((tab) => (
                       <button
                         key={tab.key}
                         onClick={() => setActiveTab(tab.key)}
-                        className={`flex items-center justify-center gap-2 font-heading font-semibold text-sm px-5 py-2.5 rounded-lg transition-all flex-1 ${
+                        className={`flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 py-2 font-heading text-xs font-semibold transition-all sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                           activeTab === tab.key
                             ? "bg-gradient-fort text-primary-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         }`}
                       >
                         {tab.icon}
-                        <span className="hidden sm:inline">{tab.label}</span>
+                        <span className="hidden min-[380px]:inline">{tab.label}</span>
                       </button>
                     ))}
                   </div>
                   <button
                     onClick={onSignOut}
-                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-destructive px-3 py-2.5 rounded-lg hover:bg-destructive/5 transition-colors shrink-0"
+                    className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive"
                   >
                     <LogOut size={16} /> <span className="hidden sm:inline">Sair</span>
                   </button>
@@ -335,8 +335,8 @@ const SiteContentForm = ({
                 </div>
               ))}
               {section.id === "banner" && (
-                <div className="flex gap-3 pt-2">
-                  <button onClick={() => handleUpload("banner_image_url")} className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-accent transition text-sm">
+                <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:gap-3">
+                  <button onClick={() => handleUpload("banner_image_url")} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent sm:w-auto">
                     <ImageIcon size={14} /> {content.banner_image_url ? "Alterar Banner" : "Adicionar Banner"}
                   </button>
                   {content.banner_image_url && <span className="text-xs text-muted-foreground self-center">✓ Banner personalizado</span>}
@@ -362,8 +362,8 @@ const SiteContentForm = ({
               rows={4}
               className="w-full px-3 py-2.5 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary outline-none resize-none text-sm"
             />
-            <div className="flex gap-3">
-              <button onClick={() => handleUpload("logo_url")} className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-accent transition text-sm">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <button onClick={() => handleUpload("logo_url")} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent sm:w-auto">
                 <ImageIcon size={14} /> {content.logo_url ? "Alterar Logo" : "Adicionar Logo"}
               </button>
               {content.logo_url && <span className="text-xs text-muted-foreground self-center">✓ Logo personalizada</span>}
@@ -468,7 +468,7 @@ const ProductsTab = ({
   return (
     <div className="space-y-4">
       {/* Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-5">
         <div className="bg-muted/30 rounded-xl p-3 text-center border border-border/30">
           <p className="font-heading font-bold text-xl text-foreground">{products.length}</p>
           <p className="text-xs text-muted-foreground">Total</p>
@@ -505,29 +505,29 @@ const ProductsTab = ({
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 items-center">
-        <div className="flex gap-1 bg-muted/30 rounded-lg p-0.5 border border-border/30 flex-wrap">
+      <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center">
+        <div className="grid grid-cols-2 gap-1 rounded-lg border border-border/30 bg-muted/30 p-0.5 sm:flex sm:flex-wrap">
           {([
             { key: "all", label: "Todos" },
             { key: "promos", label: "Promoções" },
             { key: "new", label: "Lançamentos" },
             { key: "unavailable", label: "Indisponíveis" },
           ] as const).map((f) => (
-            <button key={f.key} onClick={() => setFilter(f.key)} className={`font-heading font-semibold text-xs px-3.5 py-1.5 rounded-md transition-all ${filter === f.key ? "bg-gradient-fort text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+            <button key={f.key} onClick={() => setFilter(f.key)} className={`rounded-md px-2.5 py-2 font-heading text-xs font-semibold transition-all sm:px-3.5 sm:py-1.5 ${filter === f.key ? "bg-gradient-fort text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
               {f.label}
             </button>
           ))}
         </div>
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-border/30 bg-background text-foreground">
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="w-full rounded-lg border border-border/30 bg-background px-3 py-2 text-xs text-foreground sm:w-auto sm:py-1.5">
           <option value="all">Todas categorias</option>
           {cats.map((c) => (<option key={c} value={c}>{c}</option>))}
         </select>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as "name" | "category" | "recent")} className="text-xs px-3 py-1.5 rounded-lg border border-border/30 bg-background text-foreground">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as "name" | "category" | "recent")} className="w-full rounded-lg border border-border/30 bg-background px-3 py-2 text-xs text-foreground sm:w-auto sm:py-1.5">
           <option value="recent">Mais recente</option>
           <option value="name">Nome A-Z</option>
           <option value="category">Categoria</option>
         </select>
-        <span className="text-xs text-muted-foreground ml-auto">{filtered.length} produto(s)</span>
+        <span className="text-xs text-muted-foreground sm:ml-auto">{filtered.length} produto(s)</span>
       </div>
 
       {/* New product button */}
@@ -548,7 +548,7 @@ const ProductsTab = ({
             layout
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center gap-3 bg-muted/30 rounded-xl p-3 border border-border/30 hover:border-border/60 transition-colors group"
+            className="grid grid-cols-[3.5rem_1fr] gap-3 rounded-xl border border-border/30 bg-muted/30 p-3 transition-colors hover:border-border/60 sm:flex sm:items-center"
           >
             <img src={p.image} alt={p.name} className={`w-14 h-14 object-cover rounded-lg shrink-0 ${p.is_unavailable ? "grayscale opacity-60" : ""}`} />
             <div className="flex-1 min-w-0">
@@ -571,14 +571,14 @@ const ProductsTab = ({
                 {p.price && <span className="text-[10px] text-primary font-semibold">R$ {p.price.toFixed(2)}</span>}
               </div>
             </div>
-            <div className="flex gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => onDuplicate(p)} className="p-2 text-muted-foreground hover:text-primary rounded-lg hover:bg-primary/5 transition-colors" title="Duplicar">
+            <div className="col-span-2 grid grid-cols-3 gap-1 border-t border-border/40 pt-2 sm:col-span-1 sm:flex sm:border-t-0 sm:pt-0 sm:opacity-60 sm:transition-opacity sm:group-hover:opacity-100">
+              <button onClick={() => onDuplicate(p)} className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary" title="Duplicar" aria-label={`Duplicar ${p.name}`}>
                 <Copy size={14} />
               </button>
-              <button onClick={() => { setEditingProduct(p); setShowProductForm(true); }} className="p-2 text-muted-foreground hover:text-primary rounded-lg hover:bg-primary/5 transition-colors" title="Editar">
+              <button onClick={() => { setEditingProduct(p); setShowProductForm(true); }} className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-primary/5 hover:text-primary" title="Editar" aria-label={`Editar ${p.name}`}>
                 <Pencil size={14} />
               </button>
-              <button onClick={() => onDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive rounded-lg hover:bg-destructive/5 transition-colors" title="Excluir">
+              <button onClick={() => onDelete(p.id)} className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive" title="Excluir" aria-label={`Excluir ${p.name}`}>
                 <Trash2 size={14} />
               </button>
             </div>
@@ -659,7 +659,7 @@ const ProductForm = ({
           </div>
         </label>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <label className="block text-xs font-heading font-semibold text-muted-foreground mb-1">Preço (R$)</label>
           <input type="number" step="0.01" placeholder="0.00" value={form.price ?? ""} onChange={(e) => setForm({ ...form, price: e.target.value ? parseFloat(e.target.value) : null })} className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground focus:ring-2 focus:ring-primary outline-none text-sm" />
@@ -671,17 +671,17 @@ const ProductForm = ({
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3">
-        <button onClick={handleImageUpload} disabled={uploading} className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-accent transition text-sm disabled:opacity-50">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button onClick={handleImageUpload} disabled={uploading} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent disabled:opacity-50 sm:w-auto">
           <ImageIcon size={14} /> {uploading ? "Enviando..." : form.image ? "Alterar Imagem" : "Adicionar Imagem"}
         </button>
         {form.image && <img src={form.image} alt="preview" className="w-10 h-10 rounded-lg object-cover" />}
       </div>
-      <div className="flex gap-2 pt-1">
-        <button onClick={() => onSave(form)} disabled={saving} className="flex-1 bg-gradient-fort text-primary-foreground font-bold px-4 py-2.5 rounded-lg text-sm disabled:opacity-50 transition">
+      <div className="grid gap-2 pt-1 sm:grid-cols-[1fr_auto]">
+        <button onClick={() => onSave(form)} disabled={saving} className="rounded-lg bg-gradient-fort px-4 py-2.5 text-sm font-bold text-primary-foreground transition disabled:opacity-50">
           {saving ? "Salvando..." : "Salvar Produto"}
         </button>
-        <button onClick={onCancel} className="px-4 py-2.5 bg-muted text-foreground rounded-lg text-sm hover:bg-accent transition">Cancelar</button>
+        <button onClick={onCancel} className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground transition hover:bg-accent">Cancelar</button>
       </div>
     </motion.div>
   );
