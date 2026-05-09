@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchAnalytics, type AnalyticsSummary } from "@/lib/analytics";
+import { exportAnalyticsExcel } from "@/lib/exportAnalyticsExcel";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   Cell, PieChart, Pie, Sector, Legend, AreaChart, Area,
@@ -44,29 +45,9 @@ const AnalyticsDashboard = () => {
     setData({ totalVisits: 0, buttonClicks: { whatsapp: 0, instagram: 0, maps: 0 }, topSearches: [], topProductClicks: [], dailyVisits: [], recentEvents: [] });
   };
 
-  const handleExportCSV = () => {
+  const handleExportExcel = () => {
     if (!data) return;
-    const rows = [
-      ["Métrica", "Valor"],
-      ["Total de visitas", String(data.totalVisits)],
-      ["Cliques no WhatsApp", String(data.buttonClicks.whatsapp)],
-      ["Cliques no Instagram", String(data.buttonClicks.instagram)],
-      ["Cliques em localização", String(data.buttonClicks.maps)],
-      ["", ""],
-      ["Produto mais clicado", "Cliques"],
-      ...data.topProductClicks.map((p) => [p.name, String(p.count)]),
-      ["", ""],
-      ["Termo pesquisado", "Pesquisas"],
-      ...data.topSearches.map((s) => [s.term, String(s.count)]),
-    ];
-    const csv = rows.map((r) => r.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `relatorios-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    exportAnalyticsExcel(data);
   };
 
   if (loading) {
@@ -119,8 +100,8 @@ const AnalyticsDashboard = () => {
           Relatórios
         </h3>
         <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-            <Download size={14} /> Exportar CSV
+          <button onClick={handleExportExcel} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+            <Download size={14} /> Exportar Excel
           </button>
           <button onClick={handleReset} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors">
             <RotateCcw size={14} /> Limpar dados
