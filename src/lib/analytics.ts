@@ -9,6 +9,8 @@ type AnalyticsEvent = {
   created_at: string;
 };
 
+const stringValue = (value: unknown) => (typeof value === "string" ? value : "");
+
 export function trackEvent(eventType: string, eventData: AnalyticsEventData = {}) {
   supabase
     .from("analytics_events")
@@ -54,7 +56,7 @@ export async function fetchAnalytics(dateFrom?: string, dateTo?: string): Promis
   events
     .filter((e) => e.event_type === "product_search")
     .forEach((e) => {
-      const term = (e.event_data?.term || "").toLowerCase().trim();
+      const term = stringValue(e.event_data?.term).toLowerCase().trim();
       if (term) searchCounts[term] = (searchCounts[term] || 0) + 1;
     });
 
@@ -67,7 +69,7 @@ export async function fetchAnalytics(dateFrom?: string, dateTo?: string): Promis
   events
     .filter((e) => e.event_type === "product_click")
     .forEach((e) => {
-      const name = (e.event_data?.product_name || "").trim();
+      const name = stringValue(e.event_data?.product_name).trim();
       if (name) clickCounts[name] = (clickCounts[name] || 0) + 1;
     });
 
@@ -76,7 +78,6 @@ export async function fetchAnalytics(dateFrom?: string, dateTo?: string): Promis
     .sort((a, b) => b.count - a.count)
     .slice(0, 15);
 
-  // Daily visits for line chart (last 30 days)
   const dailyMap: Record<string, number> = {};
   events
     .filter((e) => e.event_type === "page_view")
@@ -89,7 +90,6 @@ export async function fetchAnalytics(dateFrom?: string, dateTo?: string): Promis
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-30);
 
-  // Recent events for activity feed
   const recentEvents = events.slice(0, 20).map((e) => ({
     type: e.event_type,
     data: e.event_data,

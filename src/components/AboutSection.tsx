@@ -1,13 +1,7 @@
 import { motion } from "framer-motion";
 import type { SiteContent } from "@/store/siteStore";
-import { ShieldCheck, Truck, Users, Heart, Star, Zap, Award, Package, ThumbsUp, Clock, Leaf, Globe } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-const iconMap: Record<string, LucideIcon> = {
-  ShieldCheck, Truck, Users, Heart, Star, Zap, Award, Package, ThumbsUp, Clock, Leaf, Globe,
-};
-
-export const availableIcons = Object.keys(iconMap);
+import { iconMap } from "@/lib/aboutIcons";
+import { ShieldCheck } from "lucide-react";
 
 interface Props {
   siteContent: SiteContent;

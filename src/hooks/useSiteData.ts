@@ -17,8 +17,7 @@ export function useSiteData() {
       const [prods, content] = await Promise.all([fetchProducts(), fetchSiteContent()]);
       setProducts(prods);
       setSiteContent(content);
-    } catch (err) {
-      console.error("Error loading site data:", err);
+    } catch {
       setProducts([]);
       setSiteContent(null);
       setError(NETWORK_ERROR_MESSAGE);

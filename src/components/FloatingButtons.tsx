@@ -10,7 +10,6 @@ const FloatingButtons = ({ siteContent }: Props) => {
   if (!siteContent) return null;
   return (
     <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col gap-2 md:gap-3">
-      {/* Localização */}
       <motion.a
         href={siteContent.location_link}
         target="_blank"
@@ -29,7 +28,6 @@ const FloatingButtons = ({ siteContent }: Props) => {
         </svg>
       </motion.a>
 
-      {/* Instagram */}
       <motion.a
         href={siteContent.instagram_link}
         target="_blank"
@@ -52,7 +50,6 @@ const FloatingButtons = ({ siteContent }: Props) => {
         </svg>
       </motion.a>
 
-      {/* WhatsApp */}
       <motion.a
         href={siteContent.whatsapp_link}
         target="_blank"

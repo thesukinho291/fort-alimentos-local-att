@@ -10,7 +10,7 @@ import {
   type Product,
   type Feature,
 } from "@/store/siteStore";
-import { availableIcons } from "@/components/AboutSection";
+import { availableIcons } from "@/lib/aboutIcons";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import {
   X, Plus, Pencil, Trash2, Save, LogOut, Loader2,
@@ -28,10 +28,6 @@ interface Props {
 }
 
 const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
-  const [open] = useState(true);
-  const [loggedIn] = useState(true);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [content, setContent] = useState<SiteContent>(siteContent);
   const [activeTab, setActiveTab] = useState<"site" | "products" | "analytics">("site");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -39,10 +35,6 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => { setContent(siteContent); }, [siteContent]);
-
-  const handleLogin = () => {
-    toast.error("Usuário ou senha incorretos.");
-  };
 
   const handleSaveContent = async () => {
     setSaving(true);
@@ -88,8 +80,6 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
     setShowProductForm(true);
   };
 
-  if (!open) return null;
-
   const tabs = [
     { key: "site" as const, label: "Conteúdo", icon: <FileText size={16} /> },
     { key: "products" as const, label: "Produtos", icon: <Package size={16} /> },
@@ -113,17 +103,16 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
           onClick={(e) => e.stopPropagation()}
           className="flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden bg-card shadow-float sm:h-auto sm:max-h-[95vh] sm:rounded-2xl"
         >
-          {/* Header */}
           <div className="flex shrink-0 items-center justify-between bg-gradient-fort px-4 py-3 sm:px-6 sm:py-4">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-foreground/20">
-                {loggedIn ? <LayoutDashboard size={18} className="text-primary-foreground" /> : <Settings size={18} className="text-primary-foreground" />}
+                <LayoutDashboard size={18} className="text-primary-foreground" />
               </div>
               <div className="min-w-0">
                 <h2 className="truncate font-heading text-base font-bold text-primary-foreground sm:text-lg">
-                  {loggedIn ? "Painel administrativo" : "Login administrativo"}
+                  Painel administrativo
                 </h2>
-                {loggedIn && <p className="truncate text-xs text-primary-foreground/60">Gerencie as informações do site</p>}
+                <p className="truncate text-xs text-primary-foreground/60">Gerencie as informações do site</p>
               </div>
             </div>
             <button
@@ -134,85 +123,49 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
             </button>
           </div>
 
-          {/* Body */}
           <div className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6">
-            {!loggedIn ? (
-              <div className="max-w-sm mx-auto space-y-4 py-8">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <Settings size={28} className="text-primary" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">Faça login para acessar o painel.</p>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Usuário"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary outline-none transition-shadow"
-                />
-                <input
-                  type="password"
-                  placeholder="Senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary outline-none transition-shadow"
-                />
-                <button
-                  onClick={handleLogin}
-                  className="w-full bg-gradient-fort text-primary-foreground font-heading font-bold py-3 rounded-xl hover:opacity-90 transition text-sm"
-                >
-                  Entrar
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* Tabs */}
-                <div className="sticky -top-3 z-20 mb-4 flex items-center gap-2 bg-card/95 pb-3 pt-1 backdrop-blur sm:static sm:mb-6 sm:bg-transparent sm:p-0">
-                  <div className="grid min-w-0 flex-1 grid-cols-3 gap-1 rounded-xl border border-border/30 bg-muted/40 p-1">
-                    {tabs.map((tab) => (
-                      <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 py-2 font-heading text-xs font-semibold transition-all sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
-                          activeTab === tab.key
-                            ? "bg-gradient-fort text-primary-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                        }`}
-                      >
-                        {tab.icon}
-                        <span className="hidden min-[380px]:inline">{tab.label}</span>
-                      </button>
-                    ))}
-                  </div>
+            <div className="sticky -top-3 z-20 mb-4 flex items-center gap-2 bg-card/95 pb-3 pt-1 backdrop-blur sm:static sm:mb-6 sm:bg-transparent sm:p-0">
+              <div className="grid min-w-0 flex-1 grid-cols-3 gap-1 rounded-xl border border-border/30 bg-muted/40 p-1">
+                {tabs.map((tab) => (
                   <button
-                    onClick={onSignOut}
-                    className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive"
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 py-2 font-heading text-xs font-semibold transition-all sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
+                      activeTab === tab.key
+                        ? "bg-gradient-fort text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    }`}
                   >
-                    <LogOut size={16} /> <span className="hidden sm:inline">Sair</span>
+                    {tab.icon}
+                    <span className="hidden min-[380px]:inline">{tab.label}</span>
                   </button>
-                </div>
+                ))}
+              </div>
+              <button
+                onClick={onSignOut}
+                className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-destructive/5 hover:text-destructive"
+              >
+                <LogOut size={16} /> <span className="hidden sm:inline">Sair</span>
+              </button>
+            </div>
 
-                {activeTab === "site" ? (
-                  <SiteContentForm content={content} onChange={setContent} onSave={handleSaveContent} saving={saving} />
-                ) : activeTab === "products" ? (
-                  <ProductsTab
-                    products={products}
-                    categories={content.categories}
-                    onSave={handleSaveProduct}
-                    onDelete={handleDeleteProduct}
-                    onDuplicate={handleDuplicateProduct}
-                    saving={saving}
-                    editingProduct={editingProduct}
-                    setEditingProduct={setEditingProduct}
-                    showProductForm={showProductForm}
-                    setShowProductForm={setShowProductForm}
-                  />
-                ) : (
-                  <AnalyticsDashboard />
-                )}
-              </>
+            {activeTab === "site" ? (
+              <SiteContentForm content={content} onChange={setContent} onSave={handleSaveContent} saving={saving} />
+            ) : activeTab === "products" ? (
+              <ProductsTab
+                products={products}
+                categories={content.categories}
+                onSave={handleSaveProduct}
+                onDelete={handleDeleteProduct}
+                onDuplicate={handleDuplicateProduct}
+                saving={saving}
+                editingProduct={editingProduct}
+                setEditingProduct={setEditingProduct}
+                showProductForm={showProductForm}
+                setShowProductForm={setShowProductForm}
+              />
+            ) : (
+              <AnalyticsDashboard />
             )}
           </div>
         </motion.div>
@@ -220,8 +173,6 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
     </AnimatePresence>
   );
 };
-
-/* ─── Site Content Form ─── */
 
 const SiteContentForm = ({
   content, onChange, onSave, saving,
@@ -347,7 +298,6 @@ const SiteContentForm = ({
         </div>
       ))}
 
-      {/* About text */}
       <div className="border border-border/40 rounded-xl overflow-hidden">
         <button onClick={() => toggleSection("about")} className="w-full flex items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors">
           <span className="text-primary"><FileText size={16} /></span>
@@ -372,7 +322,6 @@ const SiteContentForm = ({
         )}
       </div>
 
-      {/* Categories */}
       <div className="border border-border/40 rounded-xl overflow-hidden">
         <button onClick={() => toggleSection("categories")} className="w-full flex items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors">
           <span className="text-primary"><Package size={16} /></span>
@@ -392,7 +341,6 @@ const SiteContentForm = ({
         )}
       </div>
 
-      {/* Features */}
       <div className="border border-border/40 rounded-xl overflow-hidden">
         <button onClick={() => toggleSection("features")} className="w-full flex items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors">
           <span className="text-primary"><LayoutDashboard size={16} /></span>
@@ -418,7 +366,6 @@ const SiteContentForm = ({
         )}
       </div>
 
-      {/* Save */}
       <button onClick={onSave} disabled={saving} className="flex items-center gap-2 bg-gradient-fort text-primary-foreground font-heading font-bold px-6 py-3 rounded-xl hover:opacity-90 transition mt-2 disabled:opacity-50 w-full justify-center">
         {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
         Salvar alterações
@@ -426,8 +373,6 @@ const SiteContentForm = ({
     </div>
   );
 };
-
-/* ─── Products Tab ─── */
 
 const ProductsTab = ({
   products, categories, onSave, onDelete, onDuplicate, saving,
@@ -467,7 +412,6 @@ const ProductsTab = ({
 
   return (
     <div className="space-y-4">
-      {/* Summary */}
       <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-5">
         <div className="bg-muted/30 rounded-xl p-3 text-center border border-border/30">
           <p className="font-heading font-bold text-xl text-foreground">{products.length}</p>
@@ -491,7 +435,6 @@ const ProductsTab = ({
         </div>
       </div>
 
-      {/* Search */}
       <div className="flex items-center gap-2 bg-muted/30 rounded-xl px-3 py-2.5 border border-border/30">
         <Search size={16} className="text-muted-foreground" />
         <input
@@ -504,7 +447,6 @@ const ProductsTab = ({
         {searchTerm && <button onClick={() => setSearchTerm("")} className="text-muted-foreground hover:text-destructive"><X size={14} /></button>}
       </div>
 
-      {/* Filters */}
       <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <div className="grid grid-cols-2 gap-1 rounded-lg border border-border/30 bg-muted/30 p-0.5 sm:flex sm:flex-wrap">
           {([
@@ -530,17 +472,14 @@ const ProductsTab = ({
         <span className="text-xs text-muted-foreground sm:ml-auto">{filtered.length} produto(s)</span>
       </div>
 
-      {/* New product button */}
       <button onClick={() => handleNew(filter === "promos")} className="flex items-center gap-2 bg-gradient-fort text-primary-foreground font-heading font-bold px-5 py-2.5 rounded-xl hover:opacity-90 transition w-full justify-center">
         <Plus size={18} /> {filter === "promos" ? "Nova promoção" : "Novo produto"}
       </button>
 
-      {/* Product form */}
       {showProductForm && editingProduct && (
         <ProductForm product={editingProduct} categories={cats} onSave={onSave} onCancel={() => { setShowProductForm(false); setEditingProduct(null); }} saving={saving} />
       )}
 
-      {/* Product list */}
       <div className="space-y-2">
         {filtered.map((p) => (
           <motion.div
@@ -594,8 +533,6 @@ const ProductsTab = ({
     </div>
   );
 };
-
-/* ─── Product Form ─── */
 
 const ProductForm = ({
   product, categories, onSave, onCancel, saving,

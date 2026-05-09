@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchAnalytics, type AnalyticsSummary } from "@/lib/analytics";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Cell, PieChart, Pie, Sector, Legend, LineChart, Line, AreaChart, Area,
+  Cell, PieChart, Pie, Sector, Legend, AreaChart, Area,
 } from "recharts";
 import {
   Eye, MessageCircle, MapPin, MousePointerClick, Loader2, X,
@@ -26,17 +26,17 @@ const AnalyticsDashboard = () => {
   const [activePieIndex, setActivePieIndex] = useState(0);
   const [activeView, setActiveView] = useState<"overview" | "searches" | "products" | "activity">("overview");
 
-  const loadData = () => {
+  const loadData = useCallback((from = "", to = "") => {
     setLoading(true);
-    fetchAnalytics(dateFrom || undefined, dateTo || undefined)
+    fetchAnalytics(from || undefined, to || undefined)
       .then(setData)
       .catch(() => {})
       .finally(() => setLoading(false));
-  };
+  }, []);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  const handleFilter = () => loadData();
+  const handleFilter = () => loadData(dateFrom, dateTo);
 
   const handleReset = async () => {
     if (!confirm("Tem certeza que deseja limpar todos os dados de relatórios?")) return;
@@ -114,7 +114,6 @@ const AnalyticsDashboard = () => {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-heading font-bold text-xl text-foreground flex items-center gap-2">
           Relatórios
@@ -129,7 +128,6 @@ const AnalyticsDashboard = () => {
         </div>
       </div>
 
-      {/* Date filter + search */}
       <div className="flex flex-wrap gap-2 items-end">
         <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-2 border border-border/50">
           <Calendar size={14} className="text-muted-foreground" />
@@ -138,7 +136,7 @@ const AnalyticsDashboard = () => {
           <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="bg-transparent text-xs text-foreground outline-none w-28" />
           <button onClick={handleFilter} className="text-xs bg-primary text-primary-foreground px-2.5 py-1 rounded-lg hover:opacity-90 transition">Filtrar</button>
           {(dateFrom || dateTo) && (
-            <button onClick={() => { setDateFrom(""); setDateTo(""); setTimeout(loadData, 50); }} className="text-xs text-muted-foreground hover:text-destructive">
+            <button onClick={() => { setDateFrom(""); setDateTo(""); setTimeout(() => loadData(), 50); }} className="text-xs text-muted-foreground hover:text-destructive">
               <X size={14} />
             </button>
           )}
@@ -160,7 +158,6 @@ const AnalyticsDashboard = () => {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-1.5 bg-muted/30 rounded-xl p-1 border border-border/30">
         {tabs.map((tab) => (
           <button
@@ -177,7 +174,6 @@ const AnalyticsDashboard = () => {
         ))}
       </div>
 
-      {/* Stats cards - always visible */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard icon={<Eye size={18} />} label="Visitas" value={data.totalVisits} color="bg-primary/10 text-primary" />
         <StatCard icon={<MousePointerClick size={18} />} label="Total de cliques" value={totalClicks + totalProductClicks} color="bg-amber-100 text-amber-600" />
@@ -187,10 +183,8 @@ const AnalyticsDashboard = () => {
         <StatCard icon={<MapPin size={18} />} label="Localização" value={data.buttonClicks.maps} color="bg-blue-100 text-blue-600" />
       </div>
 
-      {/* Tab content */}
       {activeView === "overview" && (
         <div className="space-y-5">
-          {/* Daily visits line chart */}
           <ChartCard title="Visitas por dia" subtitle={`${data.dailyVisits.length} dias registrados`}>
             {data.dailyVisits.length > 0 ? (
               <div className="h-64">
@@ -215,7 +209,6 @@ const AnalyticsDashboard = () => {
             )}
           </ChartCard>
 
-          {/* Pie chart */}
           <ChartCard title="Distribuição de cliques nos botões">
             <FilterChips
               items={[
@@ -355,8 +348,6 @@ const AnalyticsDashboard = () => {
   );
 };
 
-/* ─── Helpers ─── */
-
 const getEventColor = (type: string) => {
   switch (type) {
     case "page_view": return "bg-primary/10 text-primary";
@@ -411,8 +402,6 @@ const getEventLabel = (type: string, data: AnalyticsEventData) => {
     default: return type;
   }
 };
-
-/* ─── Sub-components ─── */
 
 const ChartCard = ({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) => (
   <motion.div
