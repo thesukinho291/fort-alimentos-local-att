@@ -27,7 +27,7 @@ const AboutSection = ({ siteContent }: Props) => {
           className="text-center mb-16"
         >
           <h2 className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-2">
-            Sobre a <span className="text-gradient">Empresa</span>
+            Sobre a <span className="text-gradient">empresa</span>
           </h2>
           <div className="w-20 h-1 bg-gradient-fort mx-auto mt-4 mb-8 rounded-full" />
           <p className="max-w-3xl mx-auto text-muted-foreground text-lg leading-relaxed">

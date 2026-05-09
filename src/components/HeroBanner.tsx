@@ -40,13 +40,13 @@ const HeroBanner = ({ siteContent }: Props) => {
               href="#produtos"
               className="inline-block bg-gradient-fort text-primary-foreground font-heading font-bold px-8 py-4 rounded-lg shadow-float hover:shadow-elevated transition-all hover:scale-105"
             >
-              Ver Produtos
+              Ver produtos
             </a>
             <a
               href="#contato"
               className="inline-block border-2 border-primary-foreground/30 text-primary-foreground font-heading font-bold px-8 py-4 rounded-lg hover:bg-primary-foreground/10 transition-all"
             >
-              Fale Conosco
+              Fale conosco
             </a>
           </div>
         </motion.div>

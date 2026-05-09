@@ -36,7 +36,7 @@ const ContactSection = ({ siteContent }: Props) => {
     {
       icon: Clock,
       label: "Horário",
-      value: siteContent.business_hours || "Seg–Sex: 08:00 – 18:00",
+      value: siteContent.business_hours || "Segunda a sexta: 08:00 às 18:00",
       href: "#",
       external: false,
     },
@@ -52,7 +52,7 @@ const ContactSection = ({ siteContent }: Props) => {
           className="text-center mb-16"
         >
           <h2 className="font-heading font-bold text-3xl md:text-5xl text-primary-foreground mb-2">
-            Entre em Contato
+            Entre em contato
           </h2>
           <div className="w-20 h-1 bg-gradient-yellow mx-auto mt-4 rounded-full" />
         </motion.div>

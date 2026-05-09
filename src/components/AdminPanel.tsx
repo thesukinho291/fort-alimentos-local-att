@@ -61,7 +61,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
     if (!confirm("Tem certeza que deseja excluir este produto?")) return;
     try {
       await deleteProduct(id);
-      toast.success("Produto excluído!");
+      toast.success("Produto excluído com sucesso!");
       onSaved();
     } catch {
       toast.error("Erro ao excluir produto.");
@@ -72,7 +72,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
     setSaving(true);
     try {
       await upsertProduct(product);
-      toast.success("Produto salvo!");
+      toast.success("Produto salvo com sucesso!");
       setEditingProduct(null);
       setShowProductForm(false);
       onSaved();
@@ -93,7 +93,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
   const tabs = [
     { key: "site" as const, label: "Conteúdo", icon: <FileText size={16} /> },
     { key: "products" as const, label: "Produtos", icon: <Package size={16} /> },
-    { key: "analytics" as const, label: "Analytics", icon: <BarChart3 size={16} /> },
+    { key: "analytics" as const, label: "Relatórios", icon: <BarChart3 size={16} /> },
   ];
 
   return (
@@ -121,9 +121,9 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
               </div>
               <div className="min-w-0">
                 <h2 className="truncate font-heading text-base font-bold text-primary-foreground sm:text-lg">
-                  {loggedIn ? "Painel Administrativo" : "Login Admin"}
+                  {loggedIn ? "Painel administrativo" : "Login administrativo"}
                 </h2>
-                {loggedIn && <p className="truncate text-xs text-primary-foreground/60">Gerencie seu site completo</p>}
+                {loggedIn && <p className="truncate text-xs text-primary-foreground/60">Gerencie as informações do site</p>}
               </div>
             </div>
             <button
@@ -142,7 +142,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <Settings size={28} className="text-primary" />
                   </div>
-                  <p className="text-sm text-muted-foreground">Faça login para acessar o painel</p>
+                  <p className="text-sm text-muted-foreground">Faça login para acessar o painel.</p>
                 </div>
                 <input
                   type="text"
@@ -240,9 +240,9 @@ const SiteContentForm = ({
         try {
           const url = await uploadImage(file);
           onChange({ ...content, [key]: url });
-          toast.success("Imagem carregada!");
+          toast.success("Imagem carregada com sucesso!");
         } catch {
-          toast.error("Erro ao fazer upload.");
+          toast.error("Erro ao enviar a imagem.");
         }
       }
     };
@@ -252,34 +252,34 @@ const SiteContentForm = ({
   const sections = [
     {
       id: "geral",
-      title: "Informações Gerais",
+      title: "Informações gerais",
       icon: <Settings size={16} />,
       fields: [
-        { label: "Nome da Empresa", key: "company_name" as const },
+        { label: "Nome da empresa", key: "company_name" as const },
         { label: "Telefone", key: "phone" as const },
-        { label: "E-mail de Contato", key: "email" as const },
+        { label: "E-mail de contato", key: "email" as const },
         { label: "Endereço", key: "address" as const },
-        { label: "Horário de Funcionamento", key: "business_hours" as const },
+        { label: "Horário de funcionamento", key: "business_hours" as const },
       ],
     },
     {
       id: "banner",
-      title: "Banner Principal",
+      title: "Banner principal",
       icon: <ImageIcon size={16} />,
       fields: [
-        { label: "Título do Banner", key: "banner_title" as const },
-        { label: "Subtítulo do Banner", key: "banner_subtitle" as const },
-        { label: "Banner de Promoção (deixe vazio para ocultar)", key: "promo_banner_text" as const },
+        { label: "Título do banner", key: "banner_title" as const },
+        { label: "Subtítulo do banner", key: "banner_subtitle" as const },
+        { label: "Banner promocional (deixe em branco para ocultar)", key: "promo_banner_text" as const },
       ],
     },
     {
       id: "links",
-      title: "Redes Sociais & Links",
+      title: "Redes sociais e links",
       icon: <FileText size={16} />,
       fields: [
-        { label: "Link WhatsApp", key: "whatsapp_link" as const },
-        { label: "Link Instagram", key: "instagram_link" as const },
-        { label: "Link Localização (Google Maps)", key: "location_link" as const },
+        { label: "Link do WhatsApp", key: "whatsapp_link" as const },
+        { label: "Link do Instagram", key: "instagram_link" as const },
+        { label: "Link de localização (Google Maps)", key: "location_link" as const },
       ],
     },
   ];
@@ -289,7 +289,7 @@ const SiteContentForm = ({
     cats[index] = value;
     onChange({ ...content, categories: cats });
   };
-  const addCategory = () => onChange({ ...content, categories: [...(content.categories || defaultCategories), "Nova Categoria"] });
+  const addCategory = () => onChange({ ...content, categories: [...(content.categories || defaultCategories), "Nova categoria"] });
   const removeCategory = (index: number) => {
     const cats = [...(content.categories || defaultCategories)];
     cats.splice(index, 1);
@@ -300,7 +300,7 @@ const SiteContentForm = ({
     feats[index] = { ...feats[index], [field]: value };
     onChange({ ...content, features: feats });
   };
-  const addFeature = () => onChange({ ...content, features: [...(content.features || []), { icon: "Star", title: "Novo Card", desc: "Descrição do card" }] });
+  const addFeature = () => onChange({ ...content, features: [...(content.features || []), { icon: "Star", title: "Novo card", desc: "Descrição do card" }] });
   const removeFeature = (index: number) => {
     const feats = [...(content.features || [])];
     feats.splice(index, 1);
@@ -337,7 +337,7 @@ const SiteContentForm = ({
               {section.id === "banner" && (
                 <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:gap-3">
                   <button onClick={() => handleUpload("banner_image_url")} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent sm:w-auto">
-                    <ImageIcon size={14} /> {content.banner_image_url ? "Alterar Banner" : "Adicionar Banner"}
+                    <ImageIcon size={14} /> {content.banner_image_url ? "Alterar banner" : "Adicionar banner"}
                   </button>
                   {content.banner_image_url && <span className="text-xs text-muted-foreground self-center">✓ Banner personalizado</span>}
                 </div>
@@ -351,7 +351,7 @@ const SiteContentForm = ({
       <div className="border border-border/40 rounded-xl overflow-hidden">
         <button onClick={() => toggleSection("about")} className="w-full flex items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors">
           <span className="text-primary"><FileText size={16} /></span>
-          <span className="font-heading font-semibold text-sm text-foreground flex-1 text-left">Sobre a Empresa</span>
+          <span className="font-heading font-semibold text-sm text-foreground flex-1 text-left">Sobre a empresa</span>
           {openSection === "about" ? <ChevronUp size={16} className="text-muted-foreground" /> : <ChevronDown size={16} className="text-muted-foreground" />}
         </button>
         {openSection === "about" && (
@@ -364,7 +364,7 @@ const SiteContentForm = ({
             />
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               <button onClick={() => handleUpload("logo_url")} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent sm:w-auto">
-                <ImageIcon size={14} /> {content.logo_url ? "Alterar Logo" : "Adicionar Logo"}
+                <ImageIcon size={14} /> {content.logo_url ? "Alterar logo" : "Adicionar logo"}
               </button>
               {content.logo_url && <span className="text-xs text-muted-foreground self-center">✓ Logo personalizada</span>}
             </div>
@@ -396,7 +396,7 @@ const SiteContentForm = ({
       <div className="border border-border/40 rounded-xl overflow-hidden">
         <button onClick={() => toggleSection("features")} className="w-full flex items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors">
           <span className="text-primary"><LayoutDashboard size={16} /></span>
-          <span className="font-heading font-semibold text-sm text-foreground flex-1 text-left">Cards "Sobre" ({(content.features || []).length})</span>
+          <span className="font-heading font-semibold text-sm text-foreground flex-1 text-left">Cards da seção "Sobre" ({(content.features || []).length})</span>
           {openSection === "features" ? <ChevronUp size={16} className="text-muted-foreground" /> : <ChevronDown size={16} className="text-muted-foreground" />}
         </button>
         {openSection === "features" && (
@@ -421,7 +421,7 @@ const SiteContentForm = ({
       {/* Save */}
       <button onClick={onSave} disabled={saving} className="flex items-center gap-2 bg-gradient-fort text-primary-foreground font-heading font-bold px-6 py-3 rounded-xl hover:opacity-90 transition mt-2 disabled:opacity-50 w-full justify-center">
         {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-        Salvar Todas as Alterações
+        Salvar alterações
       </button>
     </div>
   );
@@ -519,12 +519,12 @@ const ProductsTab = ({
           ))}
         </div>
         <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="w-full rounded-lg border border-border/30 bg-background px-3 py-2 text-xs text-foreground sm:w-auto sm:py-1.5">
-          <option value="all">Todas categorias</option>
+          <option value="all">Todas as categorias</option>
           {cats.map((c) => (<option key={c} value={c}>{c}</option>))}
         </select>
         <select value={sortBy} onChange={(e) => setSortBy(e.target.value as "name" | "category" | "recent")} className="w-full rounded-lg border border-border/30 bg-background px-3 py-2 text-xs text-foreground sm:w-auto sm:py-1.5">
           <option value="recent">Mais recente</option>
-          <option value="name">Nome A-Z</option>
+          <option value="name">Nome (A-Z)</option>
           <option value="category">Categoria</option>
         </select>
         <span className="text-xs text-muted-foreground sm:ml-auto">{filtered.length} produto(s)</span>
@@ -532,7 +532,7 @@ const ProductsTab = ({
 
       {/* New product button */}
       <button onClick={() => handleNew(filter === "promos")} className="flex items-center gap-2 bg-gradient-fort text-primary-foreground font-heading font-bold px-5 py-2.5 rounded-xl hover:opacity-90 transition w-full justify-center">
-        <Plus size={18} /> {filter === "promos" ? "Nova Promoção" : "Novo Produto"}
+        <Plus size={18} /> {filter === "promos" ? "Nova promoção" : "Novo produto"}
       </button>
 
       {/* Product form */}
@@ -558,15 +558,15 @@ const ProductsTab = ({
               <p className="text-xs text-muted-foreground">{p.category}</p>
               <div className="flex flex-wrap items-center gap-1.5 mt-1">
                 {p.is_unavailable ? (
-                  <span className="text-[10px] bg-destructive text-destructive-foreground px-1.5 py-0.5 rounded-full font-bold">INDISPONÍVEL</span>
+                  <span className="text-[10px] bg-destructive text-destructive-foreground px-1.5 py-0.5 rounded-full font-bold">Indisponível</span>
                 ) : (
-                  <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">DISPONÍVEL</span>
+                  <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">Disponível</span>
                 )}
                 {p.is_new_release && (
-                  <span className="text-[10px] bg-green-600 text-white px-1.5 py-0.5 rounded-full font-bold">LANÇAMENTO</span>
+                  <span className="text-[10px] bg-green-600 text-white px-1.5 py-0.5 rounded-full font-bold">Lançamento</span>
                 )}
                 {p.is_promotion && (
-                  <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full font-bold">PROMO</span>
+                  <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded-full font-bold">Promo</span>
                 )}
                 {p.price && <span className="text-[10px] text-primary font-semibold">R$ {p.price.toFixed(2)}</span>}
               </div>
@@ -618,7 +618,7 @@ const ProductForm = ({
           setForm({ ...form, image: url });
           toast.success("Imagem carregada!");
         } catch {
-          toast.error("Erro ao fazer upload.");
+          toast.error("Erro ao enviar a imagem.");
         } finally {
           setUploading(false);
         }
@@ -633,7 +633,7 @@ const ProductForm = ({
       animate={{ opacity: 1, height: "auto" }}
       className="bg-background border border-primary/20 rounded-xl p-4 space-y-3 shadow-sm"
     >
-      <h4 className="font-heading font-semibold text-sm text-foreground">{product.id ? "Editar Produto" : "Novo Produto"}</h4>
+      <h4 className="font-heading font-semibold text-sm text-foreground">{product.id ? "Editar produto" : "Novo produto"}</h4>
       <input type="text" placeholder="Nome do produto" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2.5 rounded-lg border border-border bg-card text-foreground focus:ring-2 focus:ring-primary outline-none text-sm" />
       <textarea placeholder="Descrição" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={2} className="w-full px-3 py-2.5 rounded-lg border border-border bg-card text-foreground focus:ring-2 focus:ring-primary outline-none text-sm resize-none" />
       <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3 py-2.5 rounded-lg border border-border bg-card text-foreground focus:ring-2 focus:ring-primary outline-none text-sm">
@@ -673,13 +673,13 @@ const ProductForm = ({
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button onClick={handleImageUpload} disabled={uploading} className="flex w-full items-center justify-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm text-foreground transition hover:bg-accent disabled:opacity-50 sm:w-auto">
-          <ImageIcon size={14} /> {uploading ? "Enviando..." : form.image ? "Alterar Imagem" : "Adicionar Imagem"}
+          <ImageIcon size={14} /> {uploading ? "Enviando..." : form.image ? "Alterar imagem" : "Adicionar imagem"}
         </button>
-        {form.image && <img src={form.image} alt="preview" className="w-10 h-10 rounded-lg object-cover" />}
+        {form.image && <img src={form.image} alt="Prévia da imagem" className="w-10 h-10 rounded-lg object-cover" />}
       </div>
       <div className="grid gap-2 pt-1 sm:grid-cols-[1fr_auto]">
         <button onClick={() => onSave(form)} disabled={saving} className="rounded-lg bg-gradient-fort px-4 py-2.5 text-sm font-bold text-primary-foreground transition disabled:opacity-50">
-          {saving ? "Salvando..." : "Salvar Produto"}
+          {saving ? "Salvando..." : "Salvar produto"}
         </button>
         <button onClick={onCancel} className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground transition hover:bg-accent">Cancelar</button>
       </div>

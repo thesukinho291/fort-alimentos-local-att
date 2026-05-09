@@ -63,7 +63,7 @@ const Admin = () => {
             <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
               <Lock className="text-primary" size={24} />
             </div>
-            <h1 className="font-heading text-xl font-bold text-foreground">Painel Administrativo</h1>
+            <h1 className="font-heading text-xl font-bold text-foreground">Painel administrativo</h1>
             <p className="mt-1 text-sm text-muted-foreground">Fort Alimentos</p>
           </div>
           <div className="space-y-3">

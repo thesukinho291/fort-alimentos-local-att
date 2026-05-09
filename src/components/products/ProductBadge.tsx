@@ -28,7 +28,7 @@ const ProductBadge = ({ product, compact = false }: ProductBadgeProps) => {
   if (product.is_promotion) {
     return (
       <Badge className={`bg-gradient-yellow text-accent-foreground font-heading font-bold shadow-card border-0 ${sizeClass}`}>
-        PROMOÇÃO
+        Promoção
       </Badge>
     );
   }

@@ -39,7 +39,7 @@ const AnalyticsDashboard = () => {
   const handleFilter = () => loadData();
 
   const handleReset = async () => {
-    if (!confirm("Tem certeza que deseja resetar TODOS os dados de analytics?")) return;
+    if (!confirm("Tem certeza que deseja limpar todos os dados de relatórios?")) return;
     await supabase.from("analytics_events").delete().neq("id", "00000000-0000-0000-0000-000000000000");
     setData({ totalVisits: 0, buttonClicks: { whatsapp: 0, instagram: 0, maps: 0 }, topSearches: [], topProductClicks: [], dailyVisits: [], recentEvents: [] });
   };
@@ -48,15 +48,15 @@ const AnalyticsDashboard = () => {
     if (!data) return;
     const rows = [
       ["Métrica", "Valor"],
-      ["Total de Visitas", String(data.totalVisits)],
-      ["Cliques WhatsApp", String(data.buttonClicks.whatsapp)],
-      ["Cliques Instagram", String(data.buttonClicks.instagram)],
-      ["Cliques Maps", String(data.buttonClicks.maps)],
+      ["Total de visitas", String(data.totalVisits)],
+      ["Cliques no WhatsApp", String(data.buttonClicks.whatsapp)],
+      ["Cliques no Instagram", String(data.buttonClicks.instagram)],
+      ["Cliques em localização", String(data.buttonClicks.maps)],
       ["", ""],
-      ["Produto Mais Clicado", "Cliques"],
+      ["Produto mais clicado", "Cliques"],
       ...data.topProductClicks.map((p) => [p.name, String(p.count)]),
       ["", ""],
-      ["Termo Pesquisado", "Pesquisas"],
+      ["Termo pesquisado", "Pesquisas"],
       ...data.topSearches.map((s) => [s.term, String(s.count)]),
     ];
     const csv = rows.map((r) => r.join(",")).join("\n");
@@ -64,7 +64,7 @@ const AnalyticsDashboard = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `analytics-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `relatorios-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -73,12 +73,12 @@ const AnalyticsDashboard = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="animate-spin text-primary" size={32} />
-        <span className="ml-3 text-muted-foreground">Carregando analytics...</span>
+        <span className="ml-3 text-muted-foreground">Carregando relatórios...</span>
       </div>
     );
   }
 
-  if (!data) return <p className="text-muted-foreground text-sm">Erro ao carregar analytics.</p>;
+  if (!data) return <p className="text-muted-foreground text-sm">Erro ao carregar relatórios.</p>;
 
   const toggleHidden = (set: Set<string>, setFn: (s: Set<string>) => void, key: string) => {
     const next = new Set(set);
@@ -89,7 +89,7 @@ const AnalyticsDashboard = () => {
   const buttonData = [
     { name: "WhatsApp", value: data.buttonClicks.whatsapp, color: "#25D366" },
     { name: "Instagram", value: data.buttonClicks.instagram, color: "#E1306C" },
-    { name: "Maps", value: data.buttonClicks.maps, color: "#4285F4" },
+    { name: "Localização", value: data.buttonClicks.maps, color: "#4285F4" },
   ].filter((b) => !hiddenButtons.has(b.name));
 
   const searchData = data.topSearches
@@ -106,7 +106,7 @@ const AnalyticsDashboard = () => {
   const totalProductClicks = data.topProductClicks.reduce((a, b) => a + b.count, 0);
 
   const tabs = [
-    { key: "overview" as const, label: "Visão Geral", icon: <TrendingUp size={14} /> },
+    { key: "overview" as const, label: "Visão geral", icon: <TrendingUp size={14} /> },
     { key: "products" as const, label: "Produtos", icon: <Package size={14} /> },
     { key: "searches" as const, label: "Pesquisas", icon: <Search size={14} /> },
     { key: "activity" as const, label: "Atividade", icon: <Activity size={14} /> },
@@ -117,14 +117,14 @@ const AnalyticsDashboard = () => {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-heading font-bold text-xl text-foreground flex items-center gap-2">
-          📊 Analytics
+          Relatórios
         </h3>
         <div className="flex items-center gap-2 flex-wrap">
           <button onClick={handleExportCSV} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
             <Download size={14} /> Exportar CSV
           </button>
           <button onClick={handleReset} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors">
-            <RotateCcw size={14} /> Resetar
+            <RotateCcw size={14} /> Limpar dados
           </button>
         </div>
       </div>
@@ -180,18 +180,18 @@ const AnalyticsDashboard = () => {
       {/* Stats cards - always visible */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard icon={<Eye size={18} />} label="Visitas" value={data.totalVisits} color="bg-primary/10 text-primary" />
-        <StatCard icon={<MousePointerClick size={18} />} label="Cliques Total" value={totalClicks + totalProductClicks} color="bg-amber-100 text-amber-600" />
+        <StatCard icon={<MousePointerClick size={18} />} label="Total de cliques" value={totalClicks + totalProductClicks} color="bg-amber-100 text-amber-600" />
         <StatCard icon={<Package size={18} />} label="Produtos" value={totalProductClicks} color="bg-orange-100 text-orange-600" />
         <StatCard icon={<MessageCircle size={18} />} label="WhatsApp" value={data.buttonClicks.whatsapp} color="bg-emerald-100 text-emerald-600" />
         <StatCard icon={<InstagramIcon />} label="Instagram" value={data.buttonClicks.instagram} color="bg-pink-100 text-pink-600" />
-        <StatCard icon={<MapPin size={18} />} label="Maps" value={data.buttonClicks.maps} color="bg-blue-100 text-blue-600" />
+        <StatCard icon={<MapPin size={18} />} label="Localização" value={data.buttonClicks.maps} color="bg-blue-100 text-blue-600" />
       </div>
 
       {/* Tab content */}
       {activeView === "overview" && (
         <div className="space-y-5">
           {/* Daily visits line chart */}
-          <ChartCard title="Visitas por Dia" subtitle={`${data.dailyVisits.length} dias registrados`}>
+          <ChartCard title="Visitas por dia" subtitle={`${data.dailyVisits.length} dias registrados`}>
             {data.dailyVisits.length > 0 ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -216,12 +216,12 @@ const AnalyticsDashboard = () => {
           </ChartCard>
 
           {/* Pie chart */}
-          <ChartCard title="Distribuição de Cliques nos Botões">
+          <ChartCard title="Distribuição de cliques nos botões">
             <FilterChips
               items={[
                 { key: "WhatsApp", color: "#25D366" },
                 { key: "Instagram", color: "#E1306C" },
-                { key: "Maps", color: "#4285F4" },
+                { key: "Localização", color: "#4285F4" },
               ]}
               hidden={hiddenButtons}
               onToggle={(k) => toggleHidden(hiddenButtons, setHiddenButtons, k)}
@@ -258,7 +258,7 @@ const AnalyticsDashboard = () => {
       )}
 
       {activeView === "products" && (
-        <ChartCard title="Produtos Mais Clicados" subtitle={`${data.topProductClicks.length} produtos rastreados`}>
+        <ChartCard title="Produtos mais clicados" subtitle={`${data.topProductClicks.length} produtos rastreados`}>
           <FilterChips
             items={data.topProductClicks.map((p, i) => ({ key: p.name, color: COLORS[i % COLORS.length] }))}
             hidden={hiddenProducts}
@@ -287,7 +287,7 @@ const AnalyticsDashboard = () => {
       )}
 
       {activeView === "searches" && (
-        <ChartCard title="Termos Mais Pesquisados" subtitle={`${data.topSearches.length} termos rastreados`}>
+        <ChartCard title="Termos mais pesquisados" subtitle={`${data.topSearches.length} termos rastreados`}>
           <FilterChips
             items={data.topSearches.map((s, i) => ({ key: s.term, color: COLORS[i % COLORS.length] }))}
             hidden={hiddenSearches}
@@ -322,7 +322,7 @@ const AnalyticsDashboard = () => {
       )}
 
       {activeView === "activity" && (
-        <ChartCard title="Atividade Recente" subtitle="Últimos 20 eventos registrados">
+        <ChartCard title="Atividade recente" subtitle="Últimos 20 eventos registrados">
           {data.recentEvents.length > 0 ? (
             <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
               {data.recentEvents.map((event, i) => (

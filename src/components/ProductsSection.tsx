@@ -105,7 +105,7 @@ const ProductsSection = ({ products, categories, isLoading }: Props) => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="search"
-                placeholder="Pesquisar por nome ou descrição..."
+                placeholder="Buscar por nome ou descrição..."
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 rounded-full border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -129,7 +129,7 @@ const ProductsSection = ({ products, categories, isLoading }: Props) => {
                 className="w-full sm:w-52 appearance-none rounded-full border border-border bg-card py-3 pl-10 pr-4 text-sm font-heading font-semibold text-foreground outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="featured">Destaques</option>
-                <option value="name">Nome A-Z</option>
+                <option value="name">Nome (A-Z)</option>
                 <option value="category">Categoria</option>
               </select>
             </label>

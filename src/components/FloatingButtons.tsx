@@ -20,7 +20,7 @@ const FloatingButtons = ({ siteContent }: Props) => {
         animate={{ scale: 1 }}
         transition={{ delay: 0.8, type: "spring" }}
         whileHover={{ scale: 1.15 }}
-        aria-label="Abrir localizacao"
+        aria-label="Abrir localização"
         className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-float"
         style={{ backgroundColor: "#4285F4" }}
       >
