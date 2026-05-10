@@ -11,6 +11,7 @@ import {
   type Feature,
 } from "@/store/siteStore";
 import { availableIcons } from "@/lib/aboutIcons";
+import { IMAGE_UPLOAD_ACCEPT } from "@/lib/imageUpload";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import {
   X, Plus, Pencil, Trash2, Save, LogOut, Loader2,
@@ -184,7 +185,7 @@ const SiteContentForm = ({
   const handleUpload = async (key: "logo_url" | "banner_image_url") => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/*";
+    input.accept = IMAGE_UPLOAD_ACCEPT;
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -192,8 +193,8 @@ const SiteContentForm = ({
           const url = await uploadImage(file);
           onChange({ ...content, [key]: url });
           toast.success("Imagem carregada com sucesso!");
-        } catch {
-          toast.error("Erro ao enviar a imagem.");
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Erro ao enviar a imagem.");
         }
       }
     };
@@ -545,7 +546,7 @@ const ProductForm = ({
   const handleImageUpload = () => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/*";
+    input.accept = IMAGE_UPLOAD_ACCEPT;
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -554,8 +555,8 @@ const ProductForm = ({
           const url = await uploadImage(file);
           setForm({ ...form, image: url });
           toast.success("Imagem carregada!");
-        } catch {
-          toast.error("Erro ao enviar a imagem.");
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Erro ao enviar a imagem.");
         } finally {
           setUploading(false);
         }
