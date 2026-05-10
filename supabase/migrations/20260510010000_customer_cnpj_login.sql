@@ -228,3 +228,28 @@ BEGIN
   RETURN saved_id;
 END;
 $$;
+
+WITH vendedor_teste AS (
+  INSERT INTO public.vendedores (nome, telefone)
+  SELECT 'Vendedor Teste', '5515991138912'
+  WHERE NOT EXISTS (
+    SELECT 1 FROM public.vendedores WHERE telefone = '5515991138912'
+  )
+  RETURNING id
+),
+vendedor_padrao AS (
+  SELECT id FROM vendedor_teste
+  UNION ALL
+  SELECT id FROM public.vendedores WHERE telefone = '5515991138912'
+  LIMIT 1
+)
+INSERT INTO public.clientes (razao_social, cnpj, senha_hash, vendedor_id)
+SELECT
+  'Empresa Teste',
+  '12345678000195',
+  crypt('teste123', gen_salt('bf')),
+  vendedor_padrao.id
+FROM vendedor_padrao
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.clientes WHERE cnpj = '12345678000195'
+);
