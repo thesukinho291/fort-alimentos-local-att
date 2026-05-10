@@ -16,7 +16,18 @@ import { formatCnpj, isValidCnpj } from "@/lib/cnpj";
 type ViewMode = "vendedores" | "clientes";
 
 const emptyVendedor = { id: "", nome: "", telefone: "" };
-const emptyCliente = { id: "", razao_social: "", cnpj: "", senha: "", vendedor_id: "" };
+const emptyCliente = {
+  id: "",
+  razao_social: "",
+  nome_fantasia: "",
+  cnpj: "",
+  senha: "",
+  endereco: "",
+  cidade: "",
+  uf: "",
+  situacao_cadastral: "ATIVA",
+  vendedor_id: "",
+};
 
 const CommercialAdminTabs = ({ initialView = "vendedores" }: { initialView?: ViewMode }) => {
   const [view, setView] = useState<ViewMode>(initialView);
@@ -202,8 +213,13 @@ const CommercialAdminTabs = ({ initialView = "vendedores" }: { initialView?: Vie
             </h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <input value={clienteForm.razao_social} onChange={(e) => setClienteForm({ ...clienteForm, razao_social: e.target.value })} placeholder="Razao social" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
+              <input value={clienteForm.nome_fantasia} onChange={(e) => setClienteForm({ ...clienteForm, nome_fantasia: e.target.value })} placeholder="Nome fantasia" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
               <input value={clienteForm.cnpj} onChange={(e) => setClienteForm({ ...clienteForm, cnpj: formatCnpj(e.target.value) })} placeholder="CNPJ" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
               <input type="password" value={clienteForm.senha} onChange={(e) => setClienteForm({ ...clienteForm, senha: e.target.value })} placeholder={clienteForm.id ? "Nova senha (opcional)" : "Senha"} className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
+              <input value={clienteForm.endereco} onChange={(e) => setClienteForm({ ...clienteForm, endereco: e.target.value })} placeholder="Endereco" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
+              <input value={clienteForm.cidade} onChange={(e) => setClienteForm({ ...clienteForm, cidade: e.target.value })} placeholder="Cidade" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
+              <input value={clienteForm.uf} onChange={(e) => setClienteForm({ ...clienteForm, uf: e.target.value.toUpperCase().slice(0, 2) })} placeholder="UF" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm uppercase outline-none focus:ring-2 focus:ring-primary" />
+              <input value={clienteForm.situacao_cadastral} onChange={(e) => setClienteForm({ ...clienteForm, situacao_cadastral: e.target.value.toUpperCase() })} placeholder="Situacao cadastral" className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary" />
               <select value={clienteForm.vendedor_id} onChange={(e) => setClienteForm({ ...clienteForm, vendedor_id: e.target.value })} className="rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary">
                 <option value="">Selecione o vendedor</option>
                 {vendedores.map((vendedor) => (
@@ -231,13 +247,26 @@ const CommercialAdminTabs = ({ initialView = "vendedores" }: { initialView?: Vie
                 <div key={cliente.id} className="grid gap-3 rounded-xl border border-border/30 bg-muted/30 p-3 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div className="min-w-0">
                     <p className="truncate font-heading text-sm font-bold text-foreground">{cliente.razao_social}</p>
+                    {cliente.nome_fantasia && <p className="text-xs text-muted-foreground">{cliente.nome_fantasia}</p>}
                     <p className="text-xs text-muted-foreground">CNPJ: {formatCnpj(cliente.cnpj)}</p>
+                    {(cliente.cidade || cliente.uf) && <p className="text-xs text-muted-foreground">{cliente.cidade}/{cliente.uf}</p>}
                     <p className="text-xs text-muted-foreground">
                       Vendedor: {vendedor?.nome || "Nao vinculado"} {vendedor?.telefone ? `- ${vendedor.telefone}` : ""}
                     </p>
                   </div>
                   <div className="flex border-t border-border/40 pt-2 sm:border-t-0 sm:pt-0">
-                    <button type="button" onClick={() => setClienteForm({ id: cliente.id, razao_social: cliente.razao_social, cnpj: formatCnpj(cliente.cnpj), senha: "", vendedor_id: cliente.vendedor_id })} className="rounded-lg p-2 text-muted-foreground hover:bg-primary/5 hover:text-primary" aria-label={`Editar ${cliente.razao_social}`}>
+                    <button type="button" onClick={() => setClienteForm({
+                      id: cliente.id,
+                      razao_social: cliente.razao_social,
+                      nome_fantasia: cliente.nome_fantasia,
+                      cnpj: formatCnpj(cliente.cnpj),
+                      senha: "",
+                      endereco: cliente.endereco,
+                      cidade: cliente.cidade,
+                      uf: cliente.uf,
+                      situacao_cadastral: cliente.situacao_cadastral || "ATIVA",
+                      vendedor_id: cliente.vendedor_id,
+                    })} className="rounded-lg p-2 text-muted-foreground hover:bg-primary/5 hover:text-primary" aria-label={`Editar ${cliente.razao_social}`}>
                       <Pencil size={15} />
                     </button>
                     <button type="button" onClick={() => handleDeleteCliente(cliente.id)} className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/5 hover:text-destructive" aria-label={`Excluir ${cliente.razao_social}`}>

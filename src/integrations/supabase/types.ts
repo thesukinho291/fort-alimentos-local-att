@@ -37,30 +37,45 @@ export type Database = {
       }
       clientes: {
         Row: {
+          cidade: string
           cnpj: string
           created_at: string
+          endereco: string
           id: string
+          nome_fantasia: string
           razao_social: string
           senha_hash: string
+          situacao_cadastral: string
           updated_at: string
+          uf: string
           vendedor_id: string
         }
         Insert: {
+          cidade?: string
           cnpj: string
           created_at?: string
+          endereco?: string
           id?: string
+          nome_fantasia?: string
           razao_social: string
           senha_hash: string
+          situacao_cadastral?: string
           updated_at?: string
+          uf?: string
           vendedor_id: string
         }
         Update: {
+          cidade?: string
           cnpj?: string
           created_at?: string
+          endereco?: string
           id?: string
+          nome_fantasia?: string
           razao_social?: string
           senha_hash?: string
+          situacao_cadastral?: string
           updated_at?: string
+          uf?: string
           vendedor_id?: string
         }
         Relationships: [
@@ -253,13 +268,24 @@ export type Database = {
     Functions: {
       admin_upsert_cliente: {
         Args: {
+          p_cidade?: string
           p_cnpj: string
+          p_endereco?: string
           p_id: string | null
+          p_nome_fantasia?: string
           p_razao_social: string
           p_senha: string | null
+          p_situacao_cadastral?: string
+          p_uf?: string
           p_vendedor_id: string
         }
         Returns: string
+      }
+      is_valid_cnpj: {
+        Args: {
+          p_cnpj: string
+        }
+        Returns: boolean
       }
       login_cliente: {
         Args: {
@@ -286,6 +312,19 @@ export type Database = {
       normalize_digits: {
         Args: {
           value: string
+        }
+        Returns: string
+      }
+      registrar_cliente_empresa: {
+        Args: {
+          p_cidade: string
+          p_cnpj: string
+          p_endereco: string
+          p_nome_fantasia: string
+          p_razao_social: string
+          p_senha: string
+          p_situacao_cadastral: string
+          p_uf: string
         }
         Returns: string
       }

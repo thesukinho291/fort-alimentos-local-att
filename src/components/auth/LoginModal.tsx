@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Building2, Loader2, Lock, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { formatCnpj, isValidCnpj } from "@/lib/cnpj";
@@ -24,6 +25,10 @@ const LoginModal = () => {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Nao foi possivel entrar.");
     }
+  };
+
+  const handleRegisterClick = () => {
+    closeLogin();
   };
 
   return (
@@ -86,6 +91,12 @@ const LoginModal = () => {
           {loading && <Loader2 size={16} className="animate-spin" />}
           Entrar
         </button>
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          Ainda nao tem cadastro?{" "}
+          <Link to="/cadastro" onClick={handleRegisterClick} className="font-heading font-bold text-primary hover:underline">
+            Criar conta corporativa
+          </Link>
+        </p>
       </form>
     </div>
   );

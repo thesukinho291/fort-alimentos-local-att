@@ -18,7 +18,12 @@ export async function loginCustomer(cnpj: string, password: string) {
     p_senha: password,
   });
 
-  if (error) throw error;
+  if (error) {
+    if (error.code === "PGRST202" || error.message.toLowerCase().includes("login_cliente")) {
+      throw new Error("Banco de dados ainda nao atualizado. Aplique a migration de login por CNPJ no Supabase.");
+    }
+    throw error;
+  }
   const customer = Array.isArray(data) ? data[0] : null;
   if (!customer) throw new Error("CNPJ ou senha invalidos.");
 
@@ -30,7 +35,12 @@ export async function validateCustomerSession(sessionToken: string) {
     p_session_token: sessionToken,
   });
 
-  if (error) throw error;
+  if (error) {
+    if (error.code === "PGRST202" || error.message.toLowerCase().includes("validar_sessao_cliente")) {
+      throw new Error("Banco de dados ainda nao atualizado. Aplique a migration de login por CNPJ no Supabase.");
+    }
+    throw error;
+  }
   const customer = Array.isArray(data) ? data[0] : null;
   return (customer || null) as CustomerSession | null;
 }

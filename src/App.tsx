@@ -14,6 +14,7 @@ const queryClient = new QueryClient();
 const Admin = lazy(() => import("./pages/Admin.tsx"));
 const CustomerAccount = lazy(() => import("./pages/CustomerAccount.tsx"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail.tsx"));
+const RegisterCompany = lazy(() => import("./pages/RegisterCompany.tsx"));
 
 const RouteLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -31,6 +32,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/cadastro" element={<RegisterCompany />} />
               <Route
                 path="/minha-conta"
                 element={

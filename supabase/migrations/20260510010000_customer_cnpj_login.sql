@@ -87,13 +87,13 @@ DECLARE
   generated_token text;
   matched_cliente_id uuid;
 BEGIN
-  generated_token := encode(gen_random_bytes(32), 'hex');
+  generated_token := encode(extensions.gen_random_bytes(32), 'hex');
 
   SELECT c.id
   INTO matched_cliente_id
   FROM public.clientes c
   WHERE c.cnpj = public.normalize_digits(p_cnpj)
-    AND c.senha_hash = crypt(p_senha, c.senha_hash)
+    AND c.senha_hash = extensions.crypt(p_senha, c.senha_hash)
   LIMIT 1;
 
   IF matched_cliente_id IS NULL THEN
@@ -101,7 +101,7 @@ BEGIN
   END IF;
 
   INSERT INTO public.cliente_sessoes (cliente_id, token_hash, expires_at)
-  VALUES (matched_cliente_id, encode(digest(generated_token, 'sha256'), 'hex'), now() + interval '30 days');
+  VALUES (matched_cliente_id, encode(extensions.digest(generated_token, 'sha256'), 'hex'), now() + interval '30 days');
 
   RETURN QUERY
   SELECT
@@ -136,7 +136,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  hashed_token text := encode(digest(coalesce(p_session_token, ''), 'sha256'), 'hex');
+  hashed_token text := encode(extensions.digest(coalesce(p_session_token, ''), 'sha256'), 'hex');
 BEGIN
   UPDATE public.cliente_sessoes
   SET last_seen_at = now()
@@ -170,7 +170,7 @@ SET search_path = public
 AS $$
 BEGIN
   DELETE FROM public.cliente_sessoes
-  WHERE token_hash = encode(digest(coalesce(p_session_token, ''), 'sha256'), 'hex');
+  WHERE token_hash = encode(extensions.digest(coalesce(p_session_token, ''), 'sha256'), 'hex');
 END;
 $$;
 
@@ -207,7 +207,7 @@ BEGIN
     VALUES (
       trim(p_razao_social),
       normalized_cnpj,
-      crypt(p_senha, gen_salt('bf')),
+      extensions.crypt(p_senha, extensions.gen_salt('bf')),
       p_vendedor_id
     )
     RETURNING id INTO saved_id;
@@ -219,7 +219,7 @@ BEGIN
       vendedor_id = p_vendedor_id,
       senha_hash = CASE
         WHEN coalesce(p_senha, '') = '' THEN senha_hash
-        ELSE crypt(p_senha, gen_salt('bf'))
+        ELSE extensions.crypt(p_senha, extensions.gen_salt('bf'))
       END
     WHERE id = p_id
     RETURNING id INTO saved_id;
@@ -247,9 +247,10 @@ INSERT INTO public.clientes (razao_social, cnpj, senha_hash, vendedor_id)
 SELECT
   'Empresa Teste',
   '12345678000195',
-  crypt('teste123', gen_salt('bf')),
+  extensions.crypt('teste123', extensions.gen_salt('bf')),
   vendedor_padrao.id
 FROM vendedor_padrao
 WHERE NOT EXISTS (
   SELECT 1 FROM public.clientes WHERE cnpj = '12345678000195'
 );
+
