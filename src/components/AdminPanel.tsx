@@ -13,11 +13,12 @@ import {
 import { availableIcons } from "@/lib/aboutIcons";
 import { IMAGE_UPLOAD_ACCEPT } from "@/lib/imageUpload";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import CommercialAdminTabs from "@/components/admin/CommercialAdminTabs";
 import {
   X, Plus, Pencil, Trash2, Save, LogOut, Loader2,
   LayoutDashboard, Package, FileText, BarChart3, Search,
   ChevronDown, ChevronUp, Copy,
-  Image as ImageIcon, Settings,
+  Image as ImageIcon, Settings, UserRound, Building2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,7 +31,7 @@ interface Props {
 
 const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
   const [content, setContent] = useState<SiteContent>(siteContent);
-  const [activeTab, setActiveTab] = useState<"site" | "products" | "analytics">("site");
+  const [activeTab, setActiveTab] = useState<"site" | "products" | "vendedores" | "clientes" | "analytics">("site");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -84,6 +85,8 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
   const tabs = [
     { key: "site" as const, label: "Conteúdo", icon: <FileText size={16} /> },
     { key: "products" as const, label: "Produtos", icon: <Package size={16} /> },
+    { key: "vendedores" as const, label: "Vendedores", icon: <UserRound size={16} /> },
+    { key: "clientes" as const, label: "Clientes", icon: <Building2 size={16} /> },
     { key: "analytics" as const, label: "Relatórios", icon: <BarChart3 size={16} /> },
   ];
 
@@ -126,7 +129,7 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
 
           <div className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6">
             <div className="sticky -top-3 z-20 mb-4 flex items-center gap-2 bg-card/95 pb-3 pt-1 backdrop-blur sm:static sm:mb-6 sm:bg-transparent sm:p-0">
-              <div className="grid min-w-0 flex-1 grid-cols-3 gap-1 rounded-xl border border-border/30 bg-muted/40 p-1">
+              <div className="grid min-w-0 flex-1 grid-cols-3 gap-1 rounded-xl border border-border/30 bg-muted/40 p-1 sm:grid-cols-5">
                 {tabs.map((tab) => (
                   <button
                     key={tab.key}
@@ -165,6 +168,10 @@ const AdminPanel = ({ products, siteContent, onSaved, onSignOut }: Props) => {
                 showProductForm={showProductForm}
                 setShowProductForm={setShowProductForm}
               />
+            ) : activeTab === "vendedores" ? (
+              <CommercialAdminTabs initialView="vendedores" />
+            ) : activeTab === "clientes" ? (
+              <CommercialAdminTabs initialView="clientes" />
             ) : (
               <AnalyticsDashboard />
             )}

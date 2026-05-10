@@ -35,6 +35,79 @@ export type Database = {
         }
         Relationships: []
       }
+      clientes: {
+        Row: {
+          cnpj: string
+          created_at: string
+          id: string
+          razao_social: string
+          senha_hash: string
+          updated_at: string
+          vendedor_id: string
+        }
+        Insert: {
+          cnpj: string
+          created_at?: string
+          id?: string
+          razao_social: string
+          senha_hash: string
+          updated_at?: string
+          vendedor_id: string
+        }
+        Update: {
+          cnpj?: string
+          created_at?: string
+          id?: string
+          razao_social?: string
+          senha_hash?: string
+          updated_at?: string
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clientes_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "vendedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cliente_sessoes: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          expires_at: string
+          id: string
+          last_seen_at: string
+          token_hash: string
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          last_seen_at?: string
+          token_hash: string
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_seen_at?: string
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cliente_sessoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category: string
@@ -149,12 +222,88 @@ export type Database = {
         }
         Relationships: []
       }
+      vendedores: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          telefone: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          telefone: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          telefone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_upsert_cliente: {
+        Args: {
+          p_cnpj: string
+          p_id: string | null
+          p_razao_social: string
+          p_senha: string | null
+          p_vendedor_id: string
+        }
+        Returns: string
+      }
+      login_cliente: {
+        Args: {
+          p_cnpj: string
+          p_senha: string
+        }
+        Returns: {
+          cnpj: string
+          expires_at: string
+          id: string
+          razao_social: string
+          session_token: string
+          vendedor_id: string
+          vendedor_nome: string
+          vendedor_telefone: string
+        }[]
+      }
+      logout_cliente: {
+        Args: {
+          p_session_token: string
+        }
+        Returns: undefined
+      }
+      normalize_digits: {
+        Args: {
+          value: string
+        }
+        Returns: string
+      }
+      validar_sessao_cliente: {
+        Args: {
+          p_session_token: string
+        }
+        Returns: {
+          cnpj: string
+          expires_at: string
+          id: string
+          razao_social: string
+          session_token: string
+          vendedor_id: string
+          vendedor_nome: string
+          vendedor_telefone: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

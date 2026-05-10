@@ -1,6 +1,8 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/hooks/useCart";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { formatCnpj, normalizePhone } from "@/lib/cnpj";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { createWhatsAppHref } from "@/lib/whatsapp";
 
@@ -14,10 +16,24 @@ const CartDrawer = () => {
     decreaseQuantity,
     clearCart,
     total,
-    checkoutMessage,
   } = useCart();
+  const { customer, openLogin } = useCustomerAuth();
 
   const hasItems = items.length > 0;
+  const checkoutMessage = customer
+    ? [
+        `Pedido realizado por ${customer.razao_social}`,
+        `CNPJ: ${formatCnpj(customer.cnpj)}`,
+        "",
+        `Vendedor responsavel: ${customer.vendedor_nome}`,
+        "",
+        "Itens:",
+        ...items.map((item) => `- ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}`),
+        "",
+        `Total: ${formatCurrency(total)}`,
+      ].join("\n")
+    : "";
+  const sellerPhone = customer ? normalizePhone(customer.vendedor_telefone) : "";
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => (open ? undefined : closeCart())}>
@@ -97,14 +113,29 @@ const CartDrawer = () => {
                 <span className="font-heading text-2xl font-bold text-foreground">{formatCurrency(total)}</span>
               </div>
               <div className="grid gap-2">
-                <a
-                  href={createWhatsAppHref(checkoutMessage)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl bg-gradient-fort px-5 py-3 font-heading text-sm font-bold text-primary-foreground shadow-card transition-opacity hover:opacity-90"
-                >
-                  Finalizar pelo WhatsApp
-                </a>
+                {customer ? (
+                  <a
+                    href={createWhatsAppHref(checkoutMessage, sellerPhone)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-xl bg-gradient-fort px-5 py-3 font-heading text-sm font-bold text-primary-foreground shadow-card transition-opacity hover:opacity-90"
+                  >
+                    Finalizar pelo WhatsApp
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={openLogin}
+                    className="inline-flex items-center justify-center rounded-xl bg-gradient-fort px-5 py-3 font-heading text-sm font-bold text-primary-foreground shadow-card transition-opacity hover:opacity-90"
+                  >
+                    Entrar para finalizar
+                  </button>
+                )}
+                {customer && (
+                  <p className="text-center text-xs text-muted-foreground">
+                    Pedido enviado para {customer.vendedor_nome}.
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={clearCart}
