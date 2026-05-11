@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/hooks/useCart";
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
-import { formatCnpj, normalizePhone } from "@/lib/cnpj";
 import { formatCurrency } from "@/lib/formatCurrency";
 import CheckoutForm from "@/components/cart/CheckoutForm";
 
@@ -18,24 +16,9 @@ const CartDrawer = () => {
     clearCart,
     total,
   } = useCart();
-  const { customer, openLogin } = useCustomerAuth();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const hasItems = items.length > 0;
-  const checkoutMessage = customer
-    ? [
-        `Pedido realizado por ${customer.razao_social}`,
-        `CNPJ: ${formatCnpj(customer.cnpj)}`,
-        "",
-        `Vendedor responsavel: ${customer.vendedor_nome}`,
-        "",
-        "Itens:",
-        ...items.map((item) => `- ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}`),
-        "",
-        `Total: ${formatCurrency(total)}`,
-      ].join("\n")
-    : "";
-  const sellerPhone = customer ? normalizePhone(customer.vendedor_telefone) : "";
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
