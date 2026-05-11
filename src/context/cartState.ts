@@ -22,7 +22,6 @@ export interface CartContextValue {
   closeCart: () => void;
   total: number;
   itemCount: number;
-  checkoutMessage: string;
 }
 
 export const CartContext = createContext<CartContextValue | null>(null);

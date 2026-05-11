@@ -16,7 +16,6 @@ const HeroBanner = ({ siteContent }: Props) => {
           className="w-full h-full object-cover"
           width={1600}
           height={900}
-          fetchPriority="high"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-fort-dark/80 via-fort-dark/60 to-transparent" />

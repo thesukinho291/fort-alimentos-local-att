@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Product } from "@/store/siteStore";
 import { CartContext, type CartItem } from "@/context/cartState";
-import { formatCurrency } from "@/lib/formatCurrency";
 
 const CART_STORAGE_KEY = "fort-alimentos-cart";
 
@@ -84,23 +83,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const total = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
   const itemCount = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
-  const checkoutMessage = useMemo(() => {
-    const lines = items.map((item) => {
-      const suffix = item.quantity > 1 ? " cada" : "";
-      return `${item.quantity}x ${item.name} — ${formatCurrency(item.price)}${suffix}`;
-    });
-
-    return [
-      "Olá! Gostaria de fazer um pedido:",
-      "",
-      ...lines,
-      "",
-      `Total: ${formatCurrency(total)}`,
-      "",
-      "Aguardo o atendimento.",
-    ].join("\n");
-  }, [items, total]);
-
   const value = useMemo(
     () => ({
       items,
@@ -114,11 +96,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       closeCart,
       total,
       itemCount,
-      checkoutMessage,
     }),
     [
       addProduct,
-      checkoutMessage,
       clearCart,
       closeCart,
       decreaseQuantity,
