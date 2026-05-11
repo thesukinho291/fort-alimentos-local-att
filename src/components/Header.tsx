@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import logo from "@/assets/logo.png";
 import type { SiteContent } from "@/store/siteStore";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, UserRound, X } from "lucide-react";
 import CartButton from "@/components/cart/CartButton";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 
 interface Props {
   siteContent: SiteContent;
@@ -12,6 +13,7 @@ interface Props {
 const Header = ({ siteContent }: Props) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { customer, openLogin, logout } = useCustomerAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -56,6 +58,30 @@ const Header = ({ siteContent }: Props) => {
         </nav>
 
         <div className="flex items-center gap-1">
+          {customer ? (
+            <div className="hidden items-center gap-2 rounded-xl border border-border/50 bg-card/80 px-2.5 py-1.5 md:flex">
+              <a href="/minha-conta" className="max-w-36 truncate text-xs font-heading font-bold text-foreground">
+                {customer.razao_social}
+              </a>
+              <button
+                type="button"
+                onClick={logout}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                aria-label="Sair"
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={openLogin}
+              className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-heading font-semibold text-foreground transition-colors hover:bg-muted md:inline-flex"
+            >
+              <UserRound size={17} />
+              Entrar
+            </button>
+          )}
           <CartButton />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -84,6 +110,38 @@ const Header = ({ siteContent }: Props) => {
               {item.label}
             </a>
           ))}
+          <div className="border-t border-border px-6 py-4">
+            {customer ? (
+              <div className="grid gap-2">
+                <a href="/minha-conta" onClick={() => setMobileOpen(false)} className="font-heading text-sm font-bold text-foreground">
+                  {customer.razao_social}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMobileOpen(false);
+                  }}
+                  className="inline-flex items-center gap-2 text-sm font-heading font-semibold text-muted-foreground"
+                >
+                  <LogOut size={16} />
+                  Sair
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  openLogin();
+                  setMobileOpen(false);
+                }}
+                className="inline-flex items-center gap-2 font-heading text-sm font-bold text-primary"
+              >
+                <UserRound size={16} />
+                Entrar
+              </button>
+            )}
+          </div>
         </motion.div>
       )}
     </motion.header>

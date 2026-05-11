@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getValidatedImageExtension } from "@/lib/imageUpload";
 import type { Database, Json } from "@/integrations/supabase/types";
 
 import bebidasImg from "@/assets/bebidas.webp";
@@ -131,9 +132,14 @@ export async function deleteProduct(id: string) {
 }
 
 export async function uploadImage(file: File): Promise<string> {
-  const ext = file.name.split(".").pop();
-  const path = `${Date.now()}.${ext}`;
-  const { error } = await supabase.storage.from("images").upload(path, file);
+  const ext = getValidatedImageExtension(file);
+  const id = crypto.randomUUID();
+  const path = `${id}.${ext}`;
+  const { error } = await supabase.storage.from("images").upload(path, file, {
+    cacheControl: "31536000",
+    contentType: file.type,
+    upsert: false,
+  });
   if (error) throw error;
   const { data } = supabase.storage.from("images").getPublicUrl(path);
   return data.publicUrl;
